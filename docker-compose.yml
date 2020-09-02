@@ -11,7 +11,6 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_ROOT_USER: root
-      ##<GRANT USERとかやらなきゃダメかも？docker-compose時に最初からこれでいいのかはわからんから試す価値あり>
       #MYSQL_PASSWORD: xxxxx
       #MYSQL_USER: xxxxxx
       TZ: 'Asia/Tokyo'
@@ -21,11 +20,19 @@ services:
     volumes:
       - .:/go/src/myapp
     ports:
-      - "8080:8080"
-    environment:
-      PORT: 8080
-      BINDING: 0.0.0.0
+      - "3000"
+    command: bash -c "cd golang-myapp && realize start --server"
+    #environment:
+    #  PORT: 8080
+    #  BINDING: 0.0.0.0
     stdin_open: true
+    tty: true
+  nginx:
+    build: ./nginx_go_docker
+    ports:
+    - "80:80"
+    depends_on:
+      - "web"
     tty: true
 
 volumes:
